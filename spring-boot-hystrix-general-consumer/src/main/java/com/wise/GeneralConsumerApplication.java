@@ -9,6 +9,7 @@ import org.springframework.web.client.RestTemplate;
 
 /**
  * 启动类
+ * 监控示例：http://127.0.0.1:8082/actuator/health
  */
 @SpringBootApplication
 @EnableCircuitBreaker
