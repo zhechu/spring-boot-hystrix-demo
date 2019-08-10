@@ -5,10 +5,6 @@ spring:
   application:
     name: spring-boot-hystrix-general-consumer
 
-logging:
-  level:
-    root: INFO
-
 management:
   endpoints:
     web:
