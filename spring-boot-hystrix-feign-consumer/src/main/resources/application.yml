@@ -1,0 +1,68 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: spring-boot-hystrix-feign-consumer
+
+management:
+  endpoints:
+    web:
+      exposure:
+        # 开放所有监控端点
+        include: '*'
+  endpoint:
+    health:
+      # 是否展示健康检查详情
+      show-details: always
+
+eureka:
+  client:
+    service-url:
+      # 指定eureka server通信地址，注意/eureka/小尾巴不能少
+      defaultZone: http://admin:123456@127.0.0.1:8761/eureka/
+  instance:
+    # 是否注册 IP 到 eureka server，如不指定或设为 false，那就会注册主机名到 eureka server
+    prefer-ip-address: true
+
+# 指定 Feign 日志打印级别
+logging:
+  level:
+    com.wise.feign.UserFeignClient: debug
+
+feign:
+  hystrix:
+    # 开启熔断器
+    enabled: true
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+        # 配置 Feign 的日志级别
+        loggerLevel: full
+
+hystrix:
+  command:
+    default:
+      metrics:
+        rollingStats:
+          # 统计滚动窗口的持续时间
+          timeInMilliseconds: 3000
+      circuitBreaker:
+        # 滚动窗口中将短路请求的最小请求数
+        requestVolumeThreshold: 2
+
+# 自定义属性
+application:
+  service:
+    spring-boot-hystrix-provider:
+      name: spring-boot-hystrix-provider
+      url:
+
+ribbon:
+  eager-load:
+    # 开启 Ribbon 的饥饿加载模式（对于 restTemplate 一样生效）
+    enabled: true
+    # 指定需要饥饿加载的客户端名称、服务名
+    clients: ${application.service.spring-boot-hystrix-provider.name}
